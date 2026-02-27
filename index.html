@@ -12,7 +12,6 @@ body{
     background: #121212;
     color: #fff;
 }
-
 header{
     background:#1f1f1f;
     padding:20px;
@@ -21,13 +20,11 @@ header{
     font-weight:bold;
     color:#00ffd5;
 }
-
 .telegram, .partner{
     text-align:center;
     margin:15px;
     font-size:16px;
 }
-
 .telegram a, .partner a{
     display:inline-block;
     margin:5px;
@@ -37,27 +34,22 @@ header{
     font-weight:bold;
     transition:0.3s;
 }
-
 .telegram a{
     background:#0088cc;
     color:white;
 }
-
 .telegram a:hover{
     background:#00ffd5;
     color:black;
 }
-
 .partner a{
     background:#222;
     color:#fff;
 }
-
 .partner a:hover{
     background:#00ffd5;
     color:black;
 }
-
 #search{
     width:90%;
     padding:12px;
@@ -69,14 +61,12 @@ header{
     color:white;
     font-size:16px;
 }
-
 .container{
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap:15px;
     padding:15px;
 }
-
 .channel-card{
     background:#1e1e1e;
     padding:15px;
@@ -84,24 +74,20 @@ header{
     box-shadow: 0 4px 10px rgba(0,255,218,0.2);
     transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .channel-card:hover{
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0,255,218,0.4);
 }
-
 .channel-name{
     font-size:18px;
     font-weight:bold;
     margin-bottom:5px;
     color:#00ffd5;
 }
-
 .channel-group{
     font-size:14px;
     color:#aaa;
 }
-
 footer{
     text-align:center;
     padding:15px;
@@ -110,7 +96,6 @@ footer{
     font-size:14px;
     color:#777;
 }
-
 @media(max-width:500px){
     #search{
         width:95%;
@@ -150,7 +135,7 @@ footer{
 <footer>© KBprotv - Auto Updated from index.m3u</footer>
 
 <script>
-const playlistUrl = "index.m3u";
+const playlistUrl = "index.m3u"; // Ensure this file is in the same repo root
 let channels = [];
 
 fetch(playlistUrl)
