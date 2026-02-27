@@ -1,45 +1,213 @@
-<!DOCTYPE html>
+(Playable without download) add <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Live BDXI TV</title>
+<title>KBprotv Channels</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-body {margin:0;font-family:Arial,sans-serif;background:#121212;color:white;text-align:center;}
-header {background:#1f1f1f;padding:20px;font-size:24px;color:#00ffd5;}
-video {margin-top:20px;width:90%;max-width:900px;border-radius:10px;}
-footer {margin-top:20px;padding:10px;background:#1f1f1f;color:#aaa;}
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
+}
+
+header{
+    background:#1f1f1f;
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    color:#00ffd5;
+}
+
+.telegram, .partner{
+    text-align:center;
+    margin:15px;
+    font-size:16px;
+}
+
+.telegram a, .partner a{
+    display:inline-block;
+    margin:5px;
+    padding:8px 15px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.telegram a{
+    background:#0088cc;
+    color:white;
+}
+
+.telegram a:hover{
+    background:#00ffd5;
+    color:black;
+}
+
+.partner a{
+    background:#222;
+    color:#fff;
+}
+
+.partner a:hover{
+    background:#00ffd5;
+    color:black;
+}
+
+#search{
+    width:90%;
+    padding:12px;
+    margin:10px auto;
+    display:block;
+    border:none;
+    border-radius:8px;
+    background:#222;
+    color:white;
+    font-size:16px;
+}
+
+.container{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap:15px;
+    padding:15px;
+}
+
+.channel-card{
+    background:#1e1e1e;
+    padding:15px;
+    border-radius:12px;
+    box-shadow: 0 4px 10px rgba(0,255,218,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.channel-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,255,218,0.4);
+}
+
+.channel-name{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:5px;
+    color:#00ffd5;
+}
+
+.channel-group{
+    font-size:14px;
+    color:#aaa;
+}
+
+footer{
+    text-align:center;
+    padding:15px;
+    background:#1f1f1f;
+    margin-top:20px;
+    font-size:14px;
+    color:#777;
+}
+
+@media(max-width:500px){
+    #search{
+        width:95%;
+    }
+}
 </style>
 </head>
+
 <body>
 
-<header>📺 Live BDXI TV - ALL TIME NEW</header>
+<header>📺 KBprotv Channels List</header>
 
-<video id="video" controls autoplay></video>
+<!-- Telegram Section -->
+<div class="telegram">
+    📢 Join Our Telegram
+    <div>
+        <a href="https://t.me/iptvlinksm3u8" target="_blank">📡 IPTV Channel</a>
+    </div>
+    <div>
+        <a href="https://t.me/+55FHvHAuy0JlY2Y1" target="_blank">👥 Telegram Group</a>
+    </div>
+</div>
 
-<footer>© KBprotv - index.m3u playable in browser</footer>
+<!-- Partner Section -->
+<div class="partner">
+    📺 Partner TV:
+    <a href="https://kbtvpro.totalh.net" target="_blank">kbtvpro.totalh.net</a>
+    <br><br>
+    💻 Git Partner:
+    <a href="https://github.com/Mrbotrx/All-FREE-TV/" target="_blank">Visit GitHub</a>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<input type="text" id="search" placeholder="Search channel...">
+
+<div class="container" id="channels">Loading channels...</div>
+
+<footer>© KBprotv - Auto Updated from index.m3u</footer>
+
 <script>
-const video = document.getElementById("video");
-const playlistUrl = "http://mrbotrx.github.io/index.m3u";
+const playlistUrl = "index.m3u";
+let channels = [];
 
-// HLS.js will load m3u playlist and play in browser
-if (Hls.isSupported()) {
-    const hls = new Hls();
-    hls.loadSource(playlistUrl);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED,function() {
-        video.play();
+fetch(playlistUrl)
+.then(res => res.text())
+.then(data => {
+    const lines = data.split("\n");
+
+    for(let i=0; i<lines.length; i++){
+        if(lines[i].startsWith("#EXTINF")){
+            const info = lines[i];
+            const name = info.split(",")[1];
+
+            let group = "Others";
+            const groupMatch = info.match(/group-title="(.*?)"/);
+            if(groupMatch){
+                group = groupMatch[1];
+            }
+
+            channels.push({name, group});
+        }
+    }
+
+    renderChannels(channels);
+})
+.catch(()=>{
+    document.getElementById("channels").innerHTML="Playlist load failed!";
+});
+
+function renderChannels(list){
+    const container = document.getElementById("channels");
+    container.innerHTML="";
+
+    list.forEach(c=>{
+        const div = document.createElement("div");
+        div.className="channel-card";
+
+        const nameEl = document.createElement("div");
+        nameEl.className="channel-name";
+        nameEl.innerText=c.name;
+
+        const groupEl = document.createElement("div");
+        groupEl.className="channel-group";
+        groupEl.innerText=c.group;
+
+        div.appendChild(nameEl);
+        div.appendChild(groupEl);
+        container.appendChild(div);
     });
-} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = playlistUrl;
-    video.addEventListener('loadedmetadata', function() {
-        video.play();
-    });
-} else {
-    alert("Your browser does not support HLS playback. Use VLC or other IPTV player.");
 }
+
+document.getElementById("search").addEventListener("input", function(){
+    const value = this.value.toLowerCase();
+    const filtered = channels.filter(c => 
+        c.name.toLowerCase().includes(value)
+    );
+    renderChannels(filtered);
+});
 </script>
 
 </body>
