@@ -88,6 +88,13 @@ header{
     font-size:14px;
     color:#aaa;
 }
+video{
+    width:90%;
+    max-width:900px;
+    margin:20px auto;
+    display:block;
+    border-radius:10px;
+}
 footer{
     text-align:center;
     padding:15px;
@@ -128,33 +135,43 @@ footer{
     <a href="https://github.com/Mrbotrx/All-FREE-TV/" target="_blank">Visit GitHub</a>
 </div>
 
+<!-- Search bar -->
 <input type="text" id="search" placeholder="Search channel...">
 
+<!-- Channels container -->
 <div class="container" id="channels">Loading channels...</div>
+
+<!-- Video player -->
+<video id="video" controls autoplay></video>
 
 <footer>© KBprotv - Auto Updated from index.m3u</footer>
 
+<!-- HLS.js -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
-const playlistUrl = "index.m3u"; // Ensure this file is in the same repo root
+const video = document.getElementById("video");
+const playlistUrl = "index.m3u"; // Must be in repo root
 let channels = [];
 
+// Fetch channels from m3u
 fetch(playlistUrl)
 .then(res => res.text())
 .then(data => {
     const lines = data.split("\n");
 
-    for(let i=0; i<lines.length; i++){
+    for(let i=0;i<lines.length;i++){
         if(lines[i].startsWith("#EXTINF")){
             const info = lines[i];
             const name = info.split(",")[1];
 
             let group = "Others";
             const groupMatch = info.match(/group-title="(.*?)"/);
-            if(groupMatch){
-                group = groupMatch[1];
-            }
+            if(groupMatch){ group = groupMatch[1]; }
 
-            channels.push({name, group});
+            // Check if next line is URL for video
+            const url = lines[i+1] && !lines[i+1].startsWith("#") ? lines[i+1] : "";
+
+            channels.push({name, group, url});
         }
     }
 
@@ -183,14 +200,33 @@ function renderChannels(list){
         div.appendChild(nameEl);
         div.appendChild(groupEl);
         container.appendChild(div);
+
+        // Click to play channel
+        if(c.url){
+            div.style.cursor="pointer";
+            div.addEventListener("click", ()=>playChannel(c.url));
+        }
     });
 }
 
+function playChannel(url){
+    if(Hls.isSupported()){
+        const hls = new Hls();
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED,function(){video.play();});
+    } else if(video.canPlayType('application/vnd.apple.mpegurl')){
+        video.src = url;
+        video.addEventListener('loadedmetadata', ()=>video.play());
+    } else {
+        alert("Your browser does not support HLS. Use VLC or IPTV player.");
+    }
+}
+
+// Search functionality
 document.getElementById("search").addEventListener("input", function(){
     const value = this.value.toLowerCase();
-    const filtered = channels.filter(c => 
-        c.name.toLowerCase().includes(value)
-    );
+    const filtered = channels.filter(c => c.name.toLowerCase().includes(value));
     renderChannels(filtered);
 });
 </script>
