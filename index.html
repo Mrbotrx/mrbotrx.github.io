@@ -2,77 +2,161 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>KBprotv Live</title>
+<title>KBprotv Channels</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
-    background:#111;
+    margin:0;
+    background:#0f0f0f;
     color:white;
     font-family:Arial;
     text-align:center;
 }
-h1{
-    color:#00ffcc;
+
+header{
+    background:#111;
+    padding:15px;
+    font-size:22px;
+    color:#00ffc3;
 }
-#channels{
-    margin-top:20px;
-}
-button{
+
+#search{
+    width:90%;
+    padding:10px;
+    margin:10px auto;
     display:block;
-    margin:8px auto;
+    background:#222;
+    border:none;
+    color:white;
+}
+
+.container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+#categories{
+    width:200px;
+    background:#111;
+    padding:10px;
+}
+
+#channels{
+    flex:1;
+    padding:10px;
+    max-width:600px;
+}
+
+button{
+    width:100%;
     padding:8px;
-    width:250px;
+    margin:5px 0;
     background:#222;
     color:white;
     border:none;
     cursor:pointer;
+    text-align:left;
 }
+
 button:hover{
-    background:#00ffcc;
+    background:#00ffc3;
     color:black;
 }
-video{
-    width:80%;
-    margin-top:20px;
+
+@media(max-width:768px){
+    .container{
+        flex-direction:column;
+    }
+    #categories{
+        width:100%;
+    }
 }
 </style>
 </head>
+
 <body>
 
-<h1>📺 KBprotv Live TV</h1>
+<header>📺 KBprotv Channels List</header>
 
-<div id="channels">Loading channels...</div>
+<input type="text" id="search" placeholder="Search channel...">
 
-<video id="player" controls autoplay></video>
+<div class="container">
+    <div id="categories"></div>
+    <div id="channels">Loading channels...</div>
+</div>
 
 <script>
 
 const playlistUrl = "index.m3u";
+let channels = [];
 
 fetch(playlistUrl)
 .then(res => res.text())
 .then(data => {
     const lines = data.split("\n");
-    const container = document.getElementById("channels");
-    container.innerHTML = "";
 
     for(let i=0; i<lines.length; i++){
         if(lines[i].startsWith("#EXTINF")){
-            const name = lines[i].split(",")[1];
-            const url = lines[i+1];
+            const info = lines[i];
+            const name = info.split(",")[1];
 
-            const btn = document.createElement("button");
-            btn.innerText = name;
-            btn.onclick = () => {
-                document.getElementById("player").src = url;
-            };
+            let group = "Others";
+            const groupMatch = info.match(/group-title="(.*?)"/);
+            if(groupMatch){
+                group = groupMatch[1];
+            }
 
-            container.appendChild(btn);
+            channels.push({name, group});
         }
     }
-})
-.catch(err=>{
-    document.getElementById("channels").innerHTML="Playlist load failed!";
+
+    loadCategories();
+    loadChannels();
+});
+
+function loadCategories(){
+    const categories = [...new Set(channels.map(c => c.group))];
+    const catDiv = document.getElementById("categories");
+
+    categories.forEach(cat=>{
+        const btn = document.createElement("button");
+        btn.innerText = cat;
+        btn.onclick = ()=> loadChannels(cat);
+        catDiv.appendChild(btn);
+    });
+}
+
+function loadChannels(filter=""){
+    const chDiv = document.getElementById("channels");
+    chDiv.innerHTML="";
+
+    channels
+    .filter(c => !filter || c.group === filter)
+    .forEach(c=>{
+        const div = document.createElement("div");
+        div.innerText = c.name + " [" + c.group + "]";
+        div.style.padding = "6px";
+        div.style.borderBottom = "1px solid #333";
+        chDiv.appendChild(div);
+    });
+}
+
+document.getElementById("search").addEventListener("input", function(){
+    const value = this.value.toLowerCase();
+    const chDiv = document.getElementById("channels");
+    chDiv.innerHTML="";
+
+    channels
+    .filter(c => c.name.toLowerCase().includes(value))
+    .forEach(c=>{
+        const div = document.createElement("div");
+        div.innerText = c.name + " [" + c.group + "]";
+        div.style.padding = "6px";
+        div.style.borderBottom = "1px solid #333";
+        chDiv.appendChild(div);
+    });
 });
 
 </script>
