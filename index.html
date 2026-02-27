@@ -1,8 +1,8 @@
-(Playable without download) add <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>KBprotv Channels</title>
+<title>KBprotv Channels with Logos</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -72,7 +72,7 @@ header{
 
 .container{
     display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap:15px;
     padding:15px;
 }
@@ -83,6 +83,9 @@ header{
     border-radius:12px;
     box-shadow: 0 4px 10px rgba(0,255,218,0.2);
     transition: transform 0.2s, box-shadow 0.2s;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
 }
 
 .channel-card:hover{
@@ -90,16 +93,43 @@ header{
     box-shadow: 0 8px 20px rgba(0,255,218,0.4);
 }
 
+.channel-logo{
+    width:100px;
+    height:60px;
+    object-fit:contain;
+    margin-bottom:10px;
+    border-radius:6px;
+    background:#222;
+}
+
 .channel-name{
     font-size:18px;
     font-weight:bold;
     margin-bottom:5px;
     color:#00ffd5;
+    text-align:center;
 }
 
 .channel-group{
     font-size:14px;
     color:#aaa;
+    margin-bottom:8px;
+    text-align:center;
+}
+
+.copy-btn{
+    background:#0088cc;
+    color:white;
+    border:none;
+    border-radius:6px;
+    padding:5px 10px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.copy-btn:hover{
+    background:#00ffd5;
+    color:black;
 }
 
 footer{
@@ -118,12 +148,10 @@ footer{
 }
 </style>
 </head>
-
 <body>
 
 <header>📺 KBprotv Channels List</header>
 
-<!-- Telegram Section -->
 <div class="telegram">
     📢 Join Our Telegram
     <div>
@@ -134,7 +162,6 @@ footer{
     </div>
 </div>
 
-<!-- Partner Section -->
 <div class="partner">
     📺 Partner TV:
     <a href="https://kbtvpro.totalh.net" target="_blank">kbtvpro.totalh.net</a>
@@ -165,11 +192,13 @@ fetch(playlistUrl)
 
             let group = "Others";
             const groupMatch = info.match(/group-title="(.*?)"/);
-            if(groupMatch){
-                group = groupMatch[1];
-            }
+            if(groupMatch) group = groupMatch[1];
 
-            channels.push({name, group});
+            let logo = "";
+            const logoMatch = info.match(/tvg-logo="(.*?)"/);
+            if(logoMatch) logo = logoMatch[1];
+
+            channels.push({name, group, logo});
         }
     }
 
@@ -187,6 +216,11 @@ function renderChannels(list){
         const div = document.createElement("div");
         div.className="channel-card";
 
+        const logoEl = document.createElement("img");
+        logoEl.className="channel-logo";
+        logoEl.src = c.logo || "https://via.placeholder.com/100x60?text=No+Logo";
+        logoEl.alt = c.name;
+
         const nameEl = document.createElement("div");
         nameEl.className="channel-name";
         nameEl.innerText=c.name;
@@ -195,17 +229,26 @@ function renderChannels(list){
         groupEl.className="channel-group";
         groupEl.innerText=c.group;
 
+        const copyBtn = document.createElement("button");
+        copyBtn.className="copy-btn";
+        copyBtn.innerText="Copy Logo URL";
+        copyBtn.addEventListener("click", ()=>{
+            navigator.clipboard.writeText(c.logo || "");
+            copyBtn.innerText = "Copied!";
+            setTimeout(()=>{ copyBtn.innerText = "Copy Logo URL"; }, 1500);
+        });
+
+        div.appendChild(logoEl);
         div.appendChild(nameEl);
         div.appendChild(groupEl);
+        div.appendChild(copyBtn);
         container.appendChild(div);
     });
 }
 
 document.getElementById("search").addEventListener("input", function(){
     const value = this.value.toLowerCase();
-    const filtered = channels.filter(c => 
-        c.name.toLowerCase().includes(value)
-    );
+    const filtered = channels.filter(c => c.name.toLowerCase().includes(value));
     renderChannels(filtered);
 });
 </script>
