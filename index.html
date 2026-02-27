@@ -22,25 +22,38 @@ header{
     color:#00ffd5;
 }
 
-.telegram{
+.telegram, .partner{
     text-align:center;
     margin:15px;
     font-size:16px;
 }
 
-.telegram a{
+.telegram a, .partner a{
     display:inline-block;
     margin:5px;
     padding:8px 15px;
-    background:#0088cc;
-    color:white;
     border-radius:8px;
     text-decoration:none;
     font-weight:bold;
     transition:0.3s;
 }
 
+.telegram a{
+    background:#0088cc;
+    color:white;
+}
+
 .telegram a:hover{
+    background:#00ffd5;
+    color:black;
+}
+
+.partner a{
+    background:#222;
+    color:#fff;
+}
+
+.partner a:hover{
     background:#00ffd5;
     color:black;
 }
@@ -113,18 +126,21 @@ footer{
 <!-- Telegram Section -->
 <div class="telegram">
     📢 Join Our Telegram
-
     <div>
-        <a href="https://t.me/iptvlinksm3u8" target="_blank">
-            📡 IPTV Channel
-        </a>
+        <a href="https://t.me/iptvlinksm3u8" target="_blank">📡 IPTV Channel</a>
     </div>
-
     <div>
-        <a href="https://t.me/+55FHvHAuy0JlY2Y1" target="_blank">
-            👥 Telegram Group
-        </a>
+        <a href="https://t.me/+55FHvHAuy0JlY2Y1" target="_blank">👥 Telegram Group</a>
     </div>
+</div>
+
+<!-- Partner Section -->
+<div class="partner">
+    📺 Partner TV:
+    <a href="https://kbtvpro.totalh.net" target="_blank">kbtvpro.totalh.net</a>
+    <br><br>
+    💻 Git Partner:
+    <a href="https://github.com/Mrbotrx/All-FREE-TV/" target="_blank">Visit GitHub</a>
 </div>
 
 <input type="text" id="search" placeholder="Search channel...">
