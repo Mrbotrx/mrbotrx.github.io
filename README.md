@@ -1,83 +1,50 @@
-# mrbotrx.github.io
-Live BDXI TV ALL TIME NEW
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>KBprotv Live</title>
+# 📺 Live BDXI TV - ALL TIME NEW
 
-<style>
-body{
-    background:#111;
-    color:white;
-    font-family:Arial;
-    text-align:center;
-}
-h1{
-    color:#00ffcc;
-}
-#channels{
-    margin-top:20px;
-}
-button{
-    display:block;
-    margin:8px auto;
-    padding:8px;
-    width:250px;
-    background:#222;
-    color:white;
-    border:none;
-    cursor:pointer;
-}
-button:hover{
-    background:#00ffcc;
-    color:black;
-}
-video{
-    width:80%;
-    margin-top:20px;
-}
-</style>
-</head>
-<body>
+Welcome to **Live BDXI TV** — your go-to place for watching Bangladeshi TV channels live, anytime!
 
-<h1>📺 KBprotv Live TV</h1>
+---
 
-<div id="channels">Loading channels...</div>
+## 🔗 Main Playlist
 
-<video id="player" controls autoplay></video>
+Use this playlist in VLC or any IPTV player: http://mrbotrx.github.io/index.m3u
 
-<script>
 
-const playlistUrl = "index.m3u";
 
-fetch(playlistUrl)
-.then(res => res.text())
-.then(data => {
-    const lines = data.split("\n");
-    const container = document.getElementById("channels");
-    container.innerHTML = "";
+> **Tip:** Copy the URL above and paste into your player.
 
-    for(let i=0; i<lines.length; i++){
-        if(lines[i].startsWith("#EXTINF")){
-            const name = lines[i].split(",")[1];
-            const url = lines[i+1];
+---
 
-            const btn = document.createElement("button");
-            btn.innerText = name;
-            btn.onclick = () => {
-                document.getElementById("player").src = url;
-            };
+## 🌐 Partner TV
 
-            container.appendChild(btn);
-        }
-    }
-})
-.catch(err=>{
-    document.getElementById("channels").innerHTML="Playlist load failed!";
-});
+Partner server: https://kbtvpro.totalh.net/ 
 
-</script>
 
-</body>
-</html>
+> **Tip:** Copy the server name and paste where needed.
+
+---
+
+## 📂 Partner GitHub Playlist
+
+Partner Playlist URL: https://raw.githubusercontent.com/Mrbotrx/All-FREE-TV/refs/heads/main/combined_playlist.m3u  
+
+
+
+> **Tip:** Copy this URL for use in VLC, IPTV Smarters, or other players.
+
+---
+
+## ⚡ How to Use
+
+1. Open **VLC** or your preferred IPTV player  
+2. Go to **Media → Open Network Stream**  
+3. Paste **any of the URLs above**  
+4. Enjoy Live BDXI TV and Partner Channels!
+
+---
+
+> Hosted on [GitHub Pages](http://mrbotrx.github.io)
+
+
+
+
+ 
