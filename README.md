@@ -42,6 +42,22 @@ Partner Playlist URL: https://raw.githubusercontent.com/Mrbotrx/All-FREE-TV/refs
 
 ---
 
+
+# 📺 Live BDXI TV - ALL TIME NEW
+
+## 🔗 URLs (One-Line Copy)
+
+Main Playlist:  
+`http://mrbotrx.github.io/index.m3u`  
+
+Partner TV:  
+`kbtvpro.totalh.net`  
+
+Partner GitHub Playlist:  
+`https://raw.githubusercontent.com/Mrbotrx/All-FREE-TV/refs/heads/main/combined_playlist.m3u`
+
+> Tip: Copy any URL above in one line and paste into VLC or IPTV player.
+> 
 > Hosted on [GitHub Pages](http://mrbotrx.github.io)
 
 
