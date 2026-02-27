@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>KBprotv Live</title>
+
+<style>
+body{
+    background:#111;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+}
+h1{
+    color:#00ffcc;
+}
+#channels{
+    margin-top:20px;
+}
+button{
+    display:block;
+    margin:8px auto;
+    padding:8px;
+    width:250px;
+    background:#222;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+button:hover{
+    background:#00ffcc;
+    color:black;
+}
+video{
+    width:80%;
+    margin-top:20px;
+}
+</style>
+</head>
+<body>
+
+<h1>📺 KBprotv Live TV</h1>
+
+<div id="channels">Loading channels...</div>
+
+<video id="player" controls autoplay></video>
+
+<script>
+
+const playlistUrl = "index.m3u";
+
+fetch(playlistUrl)
+.then(res => res.text())
+.then(data => {
+    const lines = data.split("\n");
+    const container = document.getElementById("channels");
+    container.innerHTML = "";
+
+    for(let i=0; i<lines.length; i++){
+        if(lines[i].startsWith("#EXTINF")){
+            const name = lines[i].split(",")[1];
+            const url = lines[i+1];
+
+            const btn = document.createElement("button");
+            btn.innerText = name;
+            btn.onclick = () => {
+                document.getElementById("player").src = url;
+            };
+
+            container.appendChild(btn);
+        }
+    }
+})
+.catch(err=>{
+    document.getElementById("channels").innerHTML="Playlist load failed!";
+});
+
+</script>
+
+</body>
+</html>
