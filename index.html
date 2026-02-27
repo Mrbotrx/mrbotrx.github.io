@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>KBprotv Channels</title>
@@ -8,69 +8,99 @@
 <style>
 body{
     margin:0;
-    background:#0f0f0f;
-    color:white;
-    font-family:Arial;
-    text-align:center;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
 }
 
 header{
-    background:#111;
-    padding:15px;
-    font-size:22px;
-    color:#00ffc3;
+    background:#1f1f1f;
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    color:#00ffd5;
+}
+
+.telegram{
+    text-align:center;
+    margin:15px;
+    font-size:16px;
+}
+
+.telegram a{
+    display:inline-block;
+    margin:5px;
+    padding:8px 15px;
+    background:#0088cc;
+    color:white;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.telegram a:hover{
+    background:#00ffd5;
+    color:black;
 }
 
 #search{
     width:90%;
-    padding:10px;
+    padding:12px;
     margin:10px auto;
     display:block;
-    background:#222;
     border:none;
+    border-radius:8px;
+    background:#222;
     color:white;
+    font-size:16px;
 }
 
 .container{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap:15px;
+    padding:15px;
 }
 
-#categories{
-    width:200px;
-    background:#111;
-    padding:10px;
+.channel-card{
+    background:#1e1e1e;
+    padding:15px;
+    border-radius:12px;
+    box-shadow: 0 4px 10px rgba(0,255,218,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-#channels{
-    flex:1;
-    padding:10px;
-    max-width:600px;
+.channel-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,255,218,0.4);
 }
 
-button{
-    width:100%;
-    padding:8px;
-    margin:5px 0;
-    background:#222;
-    color:white;
-    border:none;
-    cursor:pointer;
-    text-align:left;
+.channel-name{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:5px;
+    color:#00ffd5;
 }
 
-button:hover{
-    background:#00ffc3;
-    color:black;
+.channel-group{
+    font-size:14px;
+    color:#aaa;
 }
 
-@media(max-width:768px){
-    .container{
-        flex-direction:column;
-    }
-    #categories{
-        width:100%;
+footer{
+    text-align:center;
+    padding:15px;
+    background:#1f1f1f;
+    margin-top:20px;
+    font-size:14px;
+    color:#777;
+}
+
+@media(max-width:500px){
+    #search{
+        width:95%;
     }
 }
 </style>
@@ -80,15 +110,30 @@ button:hover{
 
 <header>📺 KBprotv Channels List</header>
 
-<input type="text" id="search" placeholder="Search channel...">
+<!-- Telegram Section -->
+<div class="telegram">
+    📢 Join Our Telegram
 
-<div class="container">
-    <div id="categories"></div>
-    <div id="channels">Loading channels...</div>
+    <div>
+        <a href="https://t.me/iptvlinksm3u8" target="_blank">
+            📡 IPTV Channel
+        </a>
+    </div>
+
+    <div>
+        <a href="https://t.me/+55FHvHAuy0JlY2Y1" target="_blank">
+            👥 Telegram Group
+        </a>
+    </div>
 </div>
 
-<script>
+<input type="text" id="search" placeholder="Search channel...">
 
+<div class="container" id="channels">Loading channels...</div>
+
+<footer>© KBprotv - Auto Updated from index.m3u</footer>
+
+<script>
 const playlistUrl = "index.m3u";
 let channels = [];
 
@@ -112,53 +157,41 @@ fetch(playlistUrl)
         }
     }
 
-    loadCategories();
-    loadChannels();
+    renderChannels(channels);
+})
+.catch(()=>{
+    document.getElementById("channels").innerHTML="Playlist load failed!";
 });
 
-function loadCategories(){
-    const categories = [...new Set(channels.map(c => c.group))];
-    const catDiv = document.getElementById("categories");
+function renderChannels(list){
+    const container = document.getElementById("channels");
+    container.innerHTML="";
 
-    categories.forEach(cat=>{
-        const btn = document.createElement("button");
-        btn.innerText = cat;
-        btn.onclick = ()=> loadChannels(cat);
-        catDiv.appendChild(btn);
-    });
-}
-
-function loadChannels(filter=""){
-    const chDiv = document.getElementById("channels");
-    chDiv.innerHTML="";
-
-    channels
-    .filter(c => !filter || c.group === filter)
-    .forEach(c=>{
+    list.forEach(c=>{
         const div = document.createElement("div");
-        div.innerText = c.name + " [" + c.group + "]";
-        div.style.padding = "6px";
-        div.style.borderBottom = "1px solid #333";
-        chDiv.appendChild(div);
+        div.className="channel-card";
+
+        const nameEl = document.createElement("div");
+        nameEl.className="channel-name";
+        nameEl.innerText=c.name;
+
+        const groupEl = document.createElement("div");
+        groupEl.className="channel-group";
+        groupEl.innerText=c.group;
+
+        div.appendChild(nameEl);
+        div.appendChild(groupEl);
+        container.appendChild(div);
     });
 }
 
 document.getElementById("search").addEventListener("input", function(){
     const value = this.value.toLowerCase();
-    const chDiv = document.getElementById("channels");
-    chDiv.innerHTML="";
-
-    channels
-    .filter(c => c.name.toLowerCase().includes(value))
-    .forEach(c=>{
-        const div = document.createElement("div");
-        div.innerText = c.name + " [" + c.group + "]";
-        div.style.padding = "6px";
-        div.style.borderBottom = "1px solid #333";
-        chDiv.appendChild(div);
-    });
+    const filtered = channels.filter(c => 
+        c.name.toLowerCase().includes(value)
+    );
+    renderChannels(filtered);
 });
-
 </script>
 
 </body>
