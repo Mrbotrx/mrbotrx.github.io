@@ -2,255 +2,390 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>KBprotv Channels with Logos</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KB TV (BDXI) Premium V2</title>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
 body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: #fff;
+background:#0b1120;
+color:#fff;
+overflow-x:hidden;
 }
 
-header{
-    background:#1f1f1f;
-    padding:20px;
-    text-align:center;
-    font-size:24px;
-    font-weight:bold;
-    color:#00ffd5;
+.header{
+padding:20px;
+text-align:center;
+background:linear-gradient(135deg,#0f172a,#1e40af);
+border-bottom:2px solid #2563eb;
 }
 
-.telegram, .partner{
-    text-align:center;
-    margin:15px;
-    font-size:16px;
+.header h1{
+font-size:32px;
+margin-bottom:5px;
 }
 
-.telegram a, .partner a{
-    display:inline-block;
-    margin:5px;
-    padding:8px 15px;
-    border-radius:8px;
-    text-decoration:none;
-    font-weight:bold;
-    transition:0.3s;
+.header p{
+color:#cbd5e1;
 }
 
-.telegram a{
-    background:#0088cc;
-    color:white;
+.stats{
+margin-top:10px;
+display:flex;
+justify-content:center;
+gap:20px;
+font-size:14px;
 }
 
-.telegram a:hover{
-    background:#00ffd5;
-    color:black;
+.partner{
+margin-top:15px;
+display:inline-block;
+padding:12px;
+background:rgba(255,255,255,.08);
+border-radius:12px;
 }
 
 .partner a{
-    background:#222;
-    color:#fff;
+color:#60a5fa;
+text-decoration:none;
+font-weight:bold;
 }
 
-.partner a:hover{
-    background:#00ffd5;
-    color:black;
+.main{
+display:flex;
+flex-wrap:wrap;
 }
 
-#search{
-    width:90%;
-    padding:12px;
-    margin:10px auto;
-    display:block;
-    border:none;
-    border-radius:8px;
-    background:#222;
-    color:white;
-    font-size:16px;
+.player-area{
+flex:2;
+min-width:300px;
+padding:15px;
 }
 
-.container{
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap:15px;
-    padding:15px;
+.sidebar{
+flex:1;
+min-width:300px;
+background:#111827;
+height:calc(100vh - 120px);
+overflow-y:auto;
 }
 
-.channel-card{
-    background:#1e1e1e;
-    padding:15px;
-    border-radius:12px;
-    box-shadow: 0 4px 10px rgba(0,255,218,0.2);
-    transition: transform 0.2s, box-shadow 0.2s;
-    display:flex;
-    flex-direction: column;
-    align-items:center;
+video{
+width:100%;
+background:#000;
+border-radius:12px;
 }
 
-.channel-card:hover{
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,255,218,0.4);
+.now-playing{
+margin-top:10px;
+font-size:20px;
+font-weight:bold;
 }
 
-.channel-logo{
-    width:100px;
-    height:60px;
-    object-fit:contain;
-    margin-bottom:10px;
-    border-radius:6px;
-    background:#222;
+.search{
+padding:12px;
+background:#111827;
 }
 
-.channel-name{
-    font-size:18px;
-    font-weight:bold;
-    margin-bottom:5px;
-    color:#00ffd5;
-    text-align:center;
+.search input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#1f2937;
+color:#fff;
+outline:none;
 }
 
-.channel-group{
-    font-size:14px;
-    color:#aaa;
-    margin-bottom:8px;
-    text-align:center;
+.channel{
+display:flex;
+align-items:center;
+gap:10px;
+padding:12px;
+border-bottom:1px solid #1f2937;
+cursor:pointer;
+transition:.3s;
 }
 
-.copy-btn{
-    background:#0088cc;
-    color:white;
-    border:none;
-    border-radius:6px;
-    padding:5px 10px;
-    cursor:pointer;
-    transition:0.3s;
+.channel:hover{
+background:#1e293b;
 }
 
-.copy-btn:hover{
-    background:#00ffd5;
-    color:black;
+.channel.active{
+background:#2563eb;
 }
 
-footer{
-    text-align:center;
-    padding:15px;
-    background:#1f1f1f;
-    margin-top:20px;
-    font-size:14px;
-    color:#777;
+.channel img{
+width:42px;
+height:42px;
+border-radius:8px;
+object-fit:cover;
+background:#222;
 }
 
-@media(max-width:500px){
-    #search{
-        width:95%;
-    }
+.telegram{
+position:fixed;
+right:20px;
+bottom:20px;
+width:60px;
+height:60px;
+background:#0088cc;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+text-decoration:none;
+color:white;
+box-shadow:0 0 15px rgba(0,136,204,.5);
+}
+
+.footer{
+padding:15px;
+text-align:center;
+background:#111827;
+color:#94a3b8;
+}
+
+@media(max-width:768px){
+.main{
+flex-direction:column;
+}
+.sidebar{
+height:auto;
+}
 }
 </style>
 </head>
 <body>
 
-<header>📺 KBprotv Channels List</header>
+<div class="header">
 
-<div class="telegram">
-    📢 Join Our Telegram
-    <div>
-        <a href="https://t.me/iptvlinksm3u8" target="_blank">📡 IPTV Channel</a>
-    </div>
-    <div>
-        <a href="https://t.me/+55FHvHAuy0JlY2Y1" target="_blank">👥 Telegram Group</a>
-    </div>
+<h1>📺 KB TV (BDXI)</h1>
+
+<p>Bangladesh • India • Sports • Entertainment</p>
+
+<div class="stats">
+<span id="channelCount">0 Channels</span>
+<span id="clock">00:00:00</span>
 </div>
 
 <div class="partner">
-    📺 Partner TV:
-    <a href="https://kbtvpro.totalh.net" target="_blank">kbtvpro.totalh.net</a>
-    <br><br>
-    💻 Git Partner:
-    <a href="https://github.com/Mrbotrx/All-FREE-TV/" target="_blank">Visit GitHub</a>
+📺 Partner TV:
+<a href="https://kbtvpro.totalh.net" target="_blank">
+kbtvpro.totalh.net
+</a>
+
+<br><br>
+
+💻 Git Partner:
+<a href="https://github.com/Mrbotrx/All-FREE-TV/" target="_blank">
+Visit GitHub
+</a>
+
+<br><br>
+
+📢 Telegram:
+<a href="https://t.me/iptvlinksm3u8" target="_blank">
+@iptvlinksm3u8
+</a>
 </div>
 
-<input type="text" id="search" placeholder="Search channel...">
+</div>
 
-<div class="container" id="channels">Loading channels...</div>
+<div class="main">
 
-<footer>© KBprotv - Auto Updated from index.m3u</footer>
+<div class="player-area">
+
+<video id="video" controls autoplay playsinline></video>
+
+<div class="now-playing" id="currentChannel">
+Select Channel
+</div>
+
+</div>
+
+<div class="sidebar">
+
+<div class="search">
+<input type="text" id="searchInput"
+placeholder="🔍 Search Channel">
+</div>
+
+<div id="channelList"></div>
+
+</div>
+
+</div>
+
+<a class="telegram"
+href="https://t.me/iptvlinksm3u8"
+target="_blank">
+📢
+</a>
+
+<div class="footer">
+© 2026 KB TV (BDXI) Premium V2
+</div>
 
 <script>
-const playlistUrl = "index.m3u";
+
+const video = document.getElementById("video");
+const channelList = document.getElementById("channelList");
+const currentChannel = document.getElementById("currentChannel");
+const searchInput = document.getElementById("searchInput");
+
 let channels = [];
+let hls;
 
-fetch(playlistUrl)
-.then(res => res.text())
-.then(data => {
-    const lines = data.split("\n");
+function updateClock(){
+const now = new Date();
+document.getElementById("clock").innerText =
+now.toLocaleTimeString();
+}
+setInterval(updateClock,1000);
+updateClock();
 
-    for(let i=0; i<lines.length; i++){
-        if(lines[i].startsWith("#EXTINF")){
-            const info = lines[i];
-            const name = info.split(",")[1];
+function playChannel(url,name){
 
-            let group = "Others";
-            const groupMatch = info.match(/group-title="(.*?)"/);
-            if(groupMatch) group = groupMatch[1];
+currentChannel.innerText =
+"Now Playing: " + name;
 
-            let logo = "";
-            const logoMatch = info.match(/tvg-logo="(.*?)"/);
-            if(logoMatch) logo = logoMatch[1];
-
-            channels.push({name, group, logo});
-        }
-    }
-
-    renderChannels(channels);
-})
-.catch(()=>{
-    document.getElementById("channels").innerHTML="Playlist load failed!";
-});
-
-function renderChannels(list){
-    const container = document.getElementById("channels");
-    container.innerHTML="";
-
-    list.forEach(c=>{
-        const div = document.createElement("div");
-        div.className="channel-card";
-
-        const logoEl = document.createElement("img");
-        logoEl.className="channel-logo";
-        logoEl.src = c.logo || "https://via.placeholder.com/100x60?text=No+Logo";
-        logoEl.alt = c.name;
-
-        const nameEl = document.createElement("div");
-        nameEl.className="channel-name";
-        nameEl.innerText=c.name;
-
-        const groupEl = document.createElement("div");
-        groupEl.className="channel-group";
-        groupEl.innerText=c.group;
-
-        const copyBtn = document.createElement("button");
-        copyBtn.className="copy-btn";
-        copyBtn.innerText="Copy Logo URL";
-        copyBtn.addEventListener("click", ()=>{
-            navigator.clipboard.writeText(c.logo || "");
-            copyBtn.innerText = "Copied!";
-            setTimeout(()=>{ copyBtn.innerText = "Copy Logo URL"; }, 1500);
-        });
-
-        div.appendChild(logoEl);
-        div.appendChild(nameEl);
-        div.appendChild(groupEl);
-        div.appendChild(copyBtn);
-        container.appendChild(div);
-    });
+if(hls){
+hls.destroy();
 }
 
-document.getElementById("search").addEventListener("input", function(){
-    const value = this.value.toLowerCase();
-    const filtered = channels.filter(c => c.name.toLowerCase().includes(value));
-    renderChannels(filtered);
+if(Hls.isSupported()){
+
+hls = new Hls({
+enableWorker:true,
+lowLatencyMode:true
 });
+
+hls.loadSource(url);
+hls.attachMedia(video);
+
+}else{
+
+video.src = url;
+
+}
+
+}
+
+function renderChannels(list){
+
+channelList.innerHTML = "";
+
+list.forEach((ch,index)=>{
+
+const div = document.createElement("div");
+div.className = "channel";
+
+div.innerHTML = `
+<img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/42'">
+<div>${ch.name}</div>
+`;
+
+div.onclick = ()=>{
+
+document.querySelectorAll(".channel")
+.forEach(c=>c.classList.remove("active"));
+
+div.classList.add("active");
+
+playChannel(ch.url,ch.name);
+
+};
+
+channelList.appendChild(div);
+
+if(index===0 && !video.src){
+div.classList.add("active");
+playChannel(ch.url,ch.name);
+}
+
+});
+
+}
+
+fetch("index.m3u")
+
+.then(res=>res.text())
+
+.then(text=>{
+
+const lines = text.split("\n");
+
+for(let i=0;i<lines.length;i++){
+
+if(lines[i].startsWith("#EXTINF")){
+
+const info = lines[i];
+
+const name =
+info.split(",").pop().trim();
+
+const logoMatch =
+info.match(/tvg-logo="([^"]+)"/);
+
+const logo =
+logoMatch ? logoMatch[1] : "";
+
+const url =
+lines[i+1] ? lines[i+1].trim() : "";
+
+if(url.startsWith("http")){
+
+channels.push({
+name,
+logo,
+url
+});
+
+}
+
+}
+
+}
+
+document.getElementById("channelCount")
+.innerText =
+channels.length + " Channels";
+
+renderChannels(channels);
+
+})
+
+.catch(()=>{
+
+channelList.innerHTML =
+"<div style='padding:20px'>Failed to load index.m3u</div>";
+
+});
+
+searchInput.addEventListener("input",()=>{
+
+const value =
+searchInput.value.toLowerCase();
+
+const filtered =
+channels.filter(ch=>
+ch.name.toLowerCase().includes(value)
+);
+
+renderChannels(filtered);
+
+});
+
 </script>
 
 </body>
