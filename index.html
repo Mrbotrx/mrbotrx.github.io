@@ -3,295 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KB TV (BDXI) Premium V2</title>
+<title>KB TV (BDXI) Premium V5</title>
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
 body{
-background:#0b1120;
-color:#fff;
-overflow-x:hidden;
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#050816,#0b1120,#111827);
+color:white;
 }
 
+/* HEADER */
 .header{
-padding:20px;
 text-align:center;
-background:linear-gradient(135deg,#0f172a,#1e40af);
-border-bottom:2px solid #2563eb;
+padding:20px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+border-bottom:1px solid rgba(255,255,255,0.1);
 }
 
 .header h1{
-font-size:32px;
-margin-bottom:5px;
+font-size:34px;
+background:linear-gradient(90deg,#38bdf8,#22c55e);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 .header p{
-color:#cbd5e1;
+color:#94a3b8;
 }
 
-.stats{
-margin-top:10px;
+/* CATEGORY */
+.categories{
 display:flex;
 justify-content:center;
-gap:20px;
-font-size:14px;
-}
-
-.partner{
-margin-top:15px;
-display:inline-block;
-padding:12px;
-background:rgba(255,255,255,.08);
-border-radius:12px;
-}
-
-.partner a{
-color:#60a5fa;
-text-decoration:none;
-font-weight:bold;
-}
-
-.main{
-display:flex;
+gap:10px;
+padding:10px;
 flex-wrap:wrap;
 }
 
-.player-area{
-flex:2;
-min-width:300px;
+.cat-btn{
+padding:10px 18px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+background:#1e293b;
+color:white;
+transition:0.3s;
+}
+
+.cat-btn:hover{
+background:#2563eb;
+}
+
+.cat-btn.active{
+background:linear-gradient(90deg,#2563eb,#1d4ed8);
+}
+
+/* LAYOUT */
+.container{
+display:flex;
+gap:15px;
 padding:15px;
 }
 
-.sidebar{
-flex:1;
-min-width:300px;
-background:#111827;
-height:calc(100vh - 120px);
-overflow-y:auto;
+.player{
+flex:2;
+background:rgba(255,255,255,0.05);
+padding:15px;
+border-radius:20px;
+backdrop-filter:blur(10px);
 }
 
 video{
 width:100%;
-background:#000;
-border-radius:12px;
+border-radius:15px;
+background:black;
 }
 
-.now-playing{
+.now{
 margin-top:10px;
-font-size:20px;
+font-size:18px;
+color:#38bdf8;
 font-weight:bold;
 }
 
-.search{
-padding:12px;
-background:#111827;
+/* SIDEBAR */
+.sidebar{
+flex:1;
+background:rgba(255,255,255,0.05);
+border-radius:20px;
+padding:10px;
+height:70vh;
+overflow:auto;
 }
 
 .search input{
 width:100%;
 padding:12px;
 border:none;
-border-radius:10px;
-background:#1f2937;
-color:#fff;
+border-radius:12px;
+background:#1e293b;
+color:white;
 outline:none;
 }
 
+/* CHANNEL */
 .channel{
 display:flex;
-align-items:center;
 gap:10px;
-padding:12px;
-border-bottom:1px solid #1f2937;
+align-items:center;
+padding:10px;
+margin:8px;
+border-radius:12px;
 cursor:pointer;
-transition:.3s;
+background:rgba(255,255,255,0.03);
+transition:0.3s;
 }
 
 .channel:hover{
-background:#1e293b;
+background:rgba(56,189,248,0.2);
+transform:translateY(-2px);
 }
 
 .channel.active{
-background:#2563eb;
+background:linear-gradient(90deg,#2563eb,#1d4ed8);
 }
 
 .channel img{
-width:42px;
-height:42px;
-border-radius:8px;
-object-fit:cover;
-background:#222;
+width:45px;
+height:45px;
+border-radius:10px;
 }
 
+/* TELEGRAM */
 .telegram{
 position:fixed;
-right:20px;
 bottom:20px;
+right:20px;
 width:60px;
 height:60px;
-background:#0088cc;
 border-radius:50%;
+background:#0088cc;
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:28px;
 text-decoration:none;
 color:white;
-box-shadow:0 0 15px rgba(0,136,204,.5);
+box-shadow:0 0 20px #0088cc;
 }
 
-.footer{
-padding:15px;
-text-align:center;
-background:#111827;
-color:#94a3b8;
-}
-
-@media(max-width:768px){
-.main{
+/* MOBILE */
+@media(max-width:900px){
+.container{
 flex-direction:column;
-}
-.sidebar{
-height:auto;
 }
 }
 </style>
 </head>
+
 <body>
 
 <div class="header">
-
 <h1>📺 KB TV (BDXI)</h1>
-
-<p>Bangladesh • India • Sports • Entertainment</p>
-
-<div class="stats">
-<span id="channelCount">0 Channels</span>
-<span id="clock">00:00:00</span>
+<p>Premium Live Streaming V5</p>
 </div>
 
-<div class="partner">
-📺 Partner TV:
-<a href="https://kbtvpro.totalh.net" target="_blank">
-kbtvpro.totalh.net
-</a>
-
-<br><br>
-
-💻 Git Partner:
-<a href="https://github.com/Mrbotrx/All-FREE-TV/" target="_blank">
-Visit GitHub
-</a>
-
-<br><br>
-
-📢 Telegram:
-<a href="https://t.me/iptvlinksm3u8" target="_blank">
-@iptvlinksm3u8
-</a>
+<!-- CATEGORY FILTER -->
+<div class="categories">
+<button class="cat-btn active" onclick="filterCat('ALL',this)">ALL</button>
+<button class="cat-btn" onclick="filterCat('BD',this)">BD</button>
+<button class="cat-btn" onclick="filterCat('IND',this)">IND</button>
+<button class="cat-btn" onclick="filterCat('SPORTS',this)">SPORTS</button>
 </div>
 
+<div class="container">
+
+<!-- PLAYER -->
+<div class="player">
+<video id="video" controls autoplay></video>
+<div class="now" id="now">Loading...</div>
 </div>
 
-<div class="main">
-
-<div class="player-area">
-
-<video id="video" controls autoplay playsinline></video>
-
-<div class="now-playing" id="currentChannel">
-Select Channel
-</div>
-
-</div>
-
+<!-- SIDEBAR -->
 <div class="sidebar">
 
 <div class="search">
-<input type="text" id="searchInput"
-placeholder="🔍 Search Channel">
+<input type="text" id="search" placeholder="Search Channel...">
 </div>
 
-<div id="channelList"></div>
-
-</div>
+<div id="list"></div>
 
 </div>
 
-<a class="telegram"
-href="https://t.me/iptvlinksm3u8"
-target="_blank">
-📢
-</a>
-
-<div class="footer">
-© 2026 KB TV (BDXI) Premium V2
 </div>
+
+<a class="telegram" href="https://t.me/iptvlinksm3u8" target="_blank">📢</a>
 
 <script>
 
 const video = document.getElementById("video");
-const channelList = document.getElementById("channelList");
-const currentChannel = document.getElementById("currentChannel");
-const searchInput = document.getElementById("searchInput");
+const list = document.getElementById("list");
+const now = document.getElementById("now");
+const search = document.getElementById("search");
 
 let channels = [];
+let filtered = [];
+let currentCat = "ALL";
 let hls;
 
-function updateClock(){
-const now = new Date();
-document.getElementById("clock").innerText =
-now.toLocaleTimeString();
-}
-setInterval(updateClock,1000);
-updateClock();
+/* PLAY */
+function play(url,name){
+now.innerText = "Now Playing: " + name;
 
-function playChannel(url,name){
-
-currentChannel.innerText =
-"Now Playing: " + name;
-
-if(hls){
-hls.destroy();
-}
+if(hls) hls.destroy();
 
 if(Hls.isSupported()){
-
-hls = new Hls({
-enableWorker:true,
-lowLatencyMode:true
-});
-
+hls = new Hls();
 hls.loadSource(url);
 hls.attachMedia(video);
-
 }else{
-
 video.src = url;
-
+}
 }
 
-}
+/* RENDER */
+function render(data){
+list.innerHTML = "";
 
-function renderChannels(list){
-
-channelList.innerHTML = "";
-
-list.forEach((ch,index)=>{
+data.forEach((ch,i)=>{
 
 const div = document.createElement("div");
 div.className = "channel";
 
 div.innerHTML = `
-<img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/42'">
+<img src="${ch.logo || 'https://via.placeholder.com/45'}">
 <div>${ch.name}</div>
 `;
 
@@ -302,25 +251,56 @@ document.querySelectorAll(".channel")
 
 div.classList.add("active");
 
-playChannel(ch.url,ch.name);
-
+play(ch.url,ch.name);
 };
 
-channelList.appendChild(div);
+list.appendChild(div);
 
-if(index===0 && !video.src){
-div.classList.add("active");
-playChannel(ch.url,ch.name);
-}
+if(i===0) div.click();
 
 });
 
 }
 
+/* CATEGORY FILTER */
+function filterCat(cat,btn){
+
+currentCat = cat;
+
+document.querySelectorAll(".cat-btn")
+.forEach(b=>b.classList.remove("active"));
+
+btn.classList.add("active");
+
+applyFilter();
+}
+
+/* APPLY FILTER */
+function applyFilter(){
+
+let data = channels;
+
+if(currentCat !== "ALL"){
+data = data.filter(c => c.group === currentCat);
+}
+
+const q = search.value.toLowerCase();
+
+data = data.filter(c =>
+c.name.toLowerCase().includes(q)
+);
+
+filtered = data;
+
+render(filtered);
+}
+
+/* SEARCH */
+search.addEventListener("input",applyFilter);
+
+/* LOAD M3U */
 fetch("index.m3u")
-
 .then(res=>res.text())
-
 .then(text=>{
 
 const lines = text.split("\n");
@@ -329,26 +309,23 @@ for(let i=0;i<lines.length;i++){
 
 if(lines[i].startsWith("#EXTINF")){
 
-const info = lines[i];
+const line = lines[i];
 
-const name =
-info.split(",").pop().trim();
+const name = line.split(",").pop().trim();
 
-const logoMatch =
-info.match(/tvg-logo="([^"]+)"/);
+const logo = (line.match(/tvg-logo="(.*?)"/) || [])[1] || "";
 
-const logo =
-logoMatch ? logoMatch[1] : "";
+const group = (line.match(/group-title="(.*?)"/) || [])[1] || "BD";
 
-const url =
-lines[i+1] ? lines[i+1].trim() : "";
+const url = lines[i+1] ? lines[i+1].trim() : "";
 
 if(url.startsWith("http")){
 
 channels.push({
 name,
 logo,
-url
+url,
+group
 });
 
 }
@@ -357,32 +334,9 @@ url
 
 }
 
-document.getElementById("channelCount")
-.innerText =
-channels.length + " Channels";
+now.innerText = channels.length + " Channels Loaded";
 
-renderChannels(channels);
-
-})
-
-.catch(()=>{
-
-channelList.innerHTML =
-"<div style='padding:20px'>Failed to load index.m3u</div>";
-
-});
-
-searchInput.addEventListener("input",()=>{
-
-const value =
-searchInput.value.toLowerCase();
-
-const filtered =
-channels.filter(ch=>
-ch.name.toLowerCase().includes(value)
-);
-
-renderChannels(filtered);
+applyFilter();
 
 });
 
