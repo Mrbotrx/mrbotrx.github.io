@@ -161,6 +161,10 @@ box-shadow:0 0 20px #0088cc;
 .container{
 flex-direction:column;
 }
+.sidebar{
+height:auto;
+max-height:50vh;
+}
 }
 </style>
 </head>
@@ -204,7 +208,6 @@ flex-direction:column;
 <a class="telegram" href="https://t.me/iptvlinksm3u8" target="_blank">📢</a>
 
 <script>
-
 const video = document.getElementById("video");
 const list = document.getElementById("list");
 const now = document.getElementById("now");
@@ -218,6 +221,7 @@ let hls;
 /* PLAY */
 function play(url,name){
 now.innerText = "Now Playing: " + name;
+localStorage.setItem("lastChannel", JSON.stringify({url,name}));
 
 if(hls) hls.destroy();
 
@@ -225,8 +229,17 @@ if(Hls.isSupported()){
 hls = new Hls();
 hls.loadSource(url);
 hls.attachMedia(video);
+
+hls.on(Hls.Events.ERROR, function (event, data) {
+if (data.fatal) {
+now.innerText = "⚠️ Error loading stream: " + name;
+}
+});
 }else{
 video.src = url;
+video.onerror = () => {
+now.innerText = "⚠️ Error loading stream: " + name;
+};
 }
 }
 
@@ -235,63 +248,54 @@ function render(data){
 list.innerHTML = "";
 
 data.forEach((ch,i)=>{
-
 const div = document.createElement("div");
 div.className = "channel";
 
 div.innerHTML = `
-<img src="${ch.logo || 'https://via.placeholder.com/45'}">
+<img src="${ch.logo || 'https://via.placeholder.com/45'}" loading="lazy">
 <div>${ch.name}</div>
 `;
 
 div.onclick = ()=>{
-
 document.querySelectorAll(".channel")
 .forEach(c=>c.classList.remove("active"));
 
 div.classList.add("active");
-
 play(ch.url,ch.name);
 };
 
 list.appendChild(div);
-
-if(i===0) div.click();
-
 });
 
+// Auto-play last channel if available
+const last = JSON.parse(localStorage.getItem("lastChannel") || "null");
+if(last){
+play(last.url,last.name);
+}else if(data.length>0){
+list.firstChild.click();
+}
 }
 
 /* CATEGORY FILTER */
 function filterCat(cat,btn){
-
 currentCat = cat;
-
 document.querySelectorAll(".cat-btn")
 .forEach(b=>b.classList.remove("active"));
-
 btn.classList.add("active");
-
 applyFilter();
 }
 
 /* APPLY FILTER */
 function applyFilter(){
-
 let data = channels;
-
 if(currentCat !== "ALL"){
 data = data.filter(c => c.group === currentCat);
 }
-
 const q = search.value.toLowerCase();
-
 data = data.filter(c =>
 c.name.toLowerCase().includes(q)
 );
-
 filtered = data;
-
 render(filtered);
 }
 
@@ -302,44 +306,22 @@ search.addEventListener("input",applyFilter);
 fetch("index.m3u")
 .then(res=>res.text())
 .then(text=>{
-
 const lines = text.split("\n");
-
 for(let i=0;i<lines.length;i++){
-
 if(lines[i].startsWith("#EXTINF")){
-
 const line = lines[i];
-
 const name = line.split(",").pop().trim();
-
 const logo = (line.match(/tvg-logo="(.*?)"/) || [])[1] || "";
-
 const group = (line.match(/group-title="(.*?)"/) || [])[1] || "BD";
-
 const url = lines[i+1] ? lines[i+1].trim() : "";
-
 if(url.startsWith("http")){
-
-channels.push({
-name,
-logo,
-url,
-group
-});
-
+channels.push({name,logo,url,group});
 }
-
 }
-
 }
-
 now.innerText = channels.length + " Channels Loaded";
-
 applyFilter();
-
 });
-
 </script>
 
 </body>
